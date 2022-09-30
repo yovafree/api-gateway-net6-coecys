@@ -32,7 +32,13 @@ namespace GatewayApi
                 .SetBasePath(hostingContext.HostingEnvironment.ContentRootPath)  
                 .AddJsonFile("ocelot.Production.json")  
                 .AddEnvironmentVariables();
-             }else{
+             }else if (hostingContext.HostingEnvironment.EnvironmentName == "Development"){
+                 config  
+                .SetBasePath(hostingContext.HostingEnvironment.ContentRootPath)  
+                .AddJsonFile("ocelot.Development.json")  
+                .AddEnvironmentVariables();
+             }
+             else{
                  config  
                 .SetBasePath(hostingContext.HostingEnvironment.ContentRootPath)  
                 .AddJsonFile("ocelot.json")  
