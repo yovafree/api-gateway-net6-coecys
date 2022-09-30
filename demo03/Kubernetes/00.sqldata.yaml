@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: sql-data-svc
+  labels:
+    app: sql-data-bd
+spec:
+  ports:
+  - port: 1433
+    targetPort: 1433
+  selector:
+    app: sql-data-bd
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sql-data-deployment
+  labels:
+    app: sql-data-bd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sql-data-bd
+  template:
+    metadata:
+      labels:
+        app: sql-data-bd
+    spec:
+      containers:
+      - name: sql-data
+        image: crobles10/hr-database:20.0
+        ports:
+        - containerPort: 1433
+        imagePullPolicy: Always

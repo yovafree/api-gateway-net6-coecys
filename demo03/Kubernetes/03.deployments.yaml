@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gw-deployment
+  labels:
+    app: api-gw-app
+spec:
+  replicas: 1
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: api-gw-app
+  template:
+    metadata:
+      labels:
+        app: api-gw-app
+    spec:
+      containers:
+      - name: api-gw-test
+        image: yovafree/demo-coecys-2022:gw-api
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: "Production"
+        ports:
+        - containerPort: 9000
+        imagePullPolicy: Always
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-cat-deployment
+  labels:
+    app: api-cat-app
+spec:
+  replicas: 1
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: api-cat-app
+  template:
+    metadata:
+      labels:
+        app: api-cat-app
+    spec:
+      containers:
+      - name: api-cat-app
+        image: yovafree/demo-coecys-2022:cat-api
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: "Production"
+        - name: Consul__Host
+          value: "http://consul-svc:8500"
+        ports:
+        - containerPort: 80
+        imagePullPolicy: Always
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-emp-deployment
+  labels:
+    app: api-emp-app
+spec:
+  replicas: 1
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: api-emp-app
+  template:
+    metadata:
+      labels:
+        app: api-emp-app
+    spec:
+      containers:
+      - name: api-emp-app
+        image: yovafree/demo-coecys-2022:emp-api
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: "Production"
+        - name: Consul__Host
+          value: "http://consul-svc:8500"
+        - name: ConnectionStrings__DemoContext
+          value: "Server=sql-data-svc,1433;Database=HumanResources;user id=SA;password=_SqLr0ck$_"
+        ports:
+        - containerPort: 80
+        imagePullPolicy: Always
